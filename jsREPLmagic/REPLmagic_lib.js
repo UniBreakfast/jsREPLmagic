@@ -11,11 +11,11 @@ n2px = num => {
   else return num
 }
 n2col = num => {
-  if (typeof num == 'number' || ['1','2','3','4','5','6','7','8','9','0',
-      'A','B','C','D','E','F'].includes(num)) return '#'+num+num+num
+  if (typeof num == 'number' && String(num).length<3 && num>=0 ||
+      ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F']
+      .includes(num)) return '#'+num+num+num
   else return num
 }
-
 
 
 aliases = (...els) => {
