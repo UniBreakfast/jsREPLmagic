@@ -6,16 +6,11 @@ _ = undefined
 
 log = console.log
 
-n2px = num => {
-  if (typeof num == 'number') return num+'px'
-  else return num
-}
-n2col = num => {
-  if (typeof num == 'number' && String(num).length<3 && num>=0 ||
-      ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F']
-      .includes(num)) return '#'+num+num+num
-  else return num
-}
+n2px = num => typeof num == 'number' ? num+'px' : num
+
+n2col = num => typeof num == 'number' && String(num).length<3 && num>=0 ||
+  ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F']
+  .includes(num) ? '#'+num+num+num : num
 
 
 aliases = (...els) => {
