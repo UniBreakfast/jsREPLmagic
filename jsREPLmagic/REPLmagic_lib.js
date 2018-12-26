@@ -1,60 +1,76 @@
-w = window
-d = document
-b = body = d.body
-h = head = d.head
-_ = undefined
+// shortcuts for main DOM entities
+const w = window, d = document, b = body = d.body, h = head = d.head
+const _ = undefined
 
 log = console.log
 
-n2px = num => typeof num == 'number' ? num+'px' : num
+// if given a number returns a string with that number with 'px' added
+// otherwise returns what was given
+const n2px  = num => typeof num == 'number' ? num+'px' : num
 
-n2col = num => typeof num == 'number' && String(num).length<3 && num>=0 ||
+// if given 1-2 digit number or a valid hex character returns a CSS grey from it
+const n2col = num => typeof num == 'number' && String(num).length<3 && num>=0 ||
   ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F']
   .includes(num) ? '#'+num+num+num : num
 
+// evolving the DOM element by adding usual aliases for common uses
+const evo = (...els) => {
+  // works with multiple elements at once
+  els.forEach(el => {
 
-aliases = (...els) => {
-  els.forEach(el=>{
+    // shortcuts for commonly used methods and groups of methods of DOM element
     el.s = el.style
-    el.a = el.appendChild
-    el.r = el.remove
-    el.e = () => el.innerHTML = ''
-    alf = (al, prop) => { el.s[al] = val => {
-      if (val !== undefined) el.s[prop] = val
-      else return el.s[prop]
-      log(prop)
+
+    // remove or empty element
+    el.r = () => { el.remove();       return el }
+    el.e = () => { el.innerHTML = ''; return el }
+
+    // append child and append this to that
+    el.a  = el2 => { el.appendChild(el2); return el }
+    el.a2 = el2 => { el2.a(el);           return el }
+
+    // creates set/get function for a style property
+    // if function given, value goes through it
+    let sgsf = (short, prop, func) => { el.s[short] = val => {
+      if (val === _) return el.s[prop]
+      el.s[prop] = func ? func(val) : val
       return el
     } }
-    alf('di', 'display')
-    alfc = (al, prop) => { el.s[al] = val => {
-      if (val !== undefined) el.s[prop] = n2col(val)
-      else return el.s[prop]
-      return el
-    } }
-    alfc('b', 'background')
-    alfp = (al, prop) => { el.s[al] = val => {
-      if (val !== undefined) el.s[prop] = n2px(val)
-      else return el.s[prop]
-      return el
-    } }
-    alfp('m', 'margin')
-    alfp('h', 'height')
-    alfp('w', 'width')
-    el.whb = (w, h, b) => { el.s.w(w); el.s.h(h); el.s.b(b); return el }
-    el.a2 = el2 => { el2.a(el); return el }
+    sgsf('di', 'display')
+
+    // set/get style function for color properties
+    let sgsfc = (short, prop) => sgsf(short, prop, n2col)
+    sgsfc('b', 'background')
+    sgsfc('c', 'color')
+
+    // set/get style function for size unit properties
+    let sgsfp = (short, prop) => sgsf(short, prop, n2px)
+    sgsfp('m', 'margin')
+    sgsfp('h', 'height')
+    sgsfp('w', 'width')
+
+    // size/color shorthand for width, height, background, foreground
+    el.sc = el.whbc = (w, h, b, c) => {
+      if (w===_ && h===_ && b===_ && c===_)
+        return {w: el.s.w(), h: el.s.h(), b: el.s.b(), c: el.s.c()}
+      el.s.w(w); el.s.h(h); el.s.b(b); el.s.c(c); return el
+    }
+
   })
+  if (els.length==1) return els[0]
 }
 
-aliases(h, b)
+evo(h, b)
 
 b.s.m(0)
 b.s.h('100vh')
 b.s.background = 'rgb(36, 36, 36)'
 
-nel = tag => {
+nel = (tag, id) => {
   let el = d.createElement(tag)
-  aliases(el)
+  evo(el)
   el.s.boxSizing = 'border-box'
+  if (id) el.id = id
   return el }
 
 nel_make = tag => w['nel'+tag.charAt(0)] = () => nel(tag)
