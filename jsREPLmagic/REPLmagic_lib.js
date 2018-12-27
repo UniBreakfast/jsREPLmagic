@@ -29,25 +29,34 @@ const evo = (...els) => {
     el.a  = el2 => { el.appendChild(el2); return el }
     el.a2 = el2 => { el2.a(el);           return el }
 
-    // creates set/get function for a style property
+    // creates set/get method for a property
     // if function given, value goes through it
-    let sgsf = (short, prop, func) => { el.s[short] = val => {
+    let sgm = (short, prop, func) => { el[short] = val => {
+      if (val === _) return el[prop]
+      el[prop] = func ? func(val) : val
+      return el
+    } }
+    sgm('Id', 'id')
+
+    // creates set/get method for a style property
+    // if function given, value goes through it
+    let sgsm = (short, prop, func) => { el.s[short] = val => {
       if (val === _) return el.s[prop]
       el.s[prop] = func ? func(val) : val
       return el
     } }
-    sgsf('di', 'display')
+    sgsm('di', 'display')
 
     // set/get style function for color properties
-    let sgsfc = (short, prop) => sgsf(short, prop, n2col)
-    sgsfc('b', 'background')
-    sgsfc('c', 'color')
+    let sgsmc = (short, prop) => sgsm(short, prop, n2col)
+    sgsmc('b', 'background')
+    sgsmc('c', 'color')
 
     // set/get style function for size unit properties
-    let sgsfp = (short, prop) => sgsf(short, prop, n2px)
-    sgsfp('m', 'margin')
-    sgsfp('h', 'height')
-    sgsfp('w', 'width')
+    let sgsmp = (short, prop) => sgsm(short, prop, n2px)
+    sgsmp('m', 'margin')
+    sgsmp('h', 'height')
+    sgsmp('w', 'width')
 
     // size/color shorthand for width, height, background, foreground
     el.sc = el.whbc = (w, h, b, c) => {
@@ -67,20 +76,20 @@ b.s.h('100vh')
 b.s.background = 'rgb(36, 36, 36)'
 
 nel = (tag, id) => {
-  let el = d.createElement(tag)
-  evo(el)
+  let el = evo(d.createElement(tag))
   el.s.boxSizing = 'border-box'
   if (id) el.id = id
   return el }
 
-nel_make = tag => w['nel'+tag.charAt(0)] = () => nel(tag)
+nel_make = tag => eval(`w['nel${tag.charAt(0)}'] = function nel${tag.charAt(0)
+                       }(id) { return nel('${tag}', id) }`)
 nel_make('div')
 nel_make('span')
 nel_make('input')
 nel_make('button')
 
-nel_make_r = tag => w['nel'+tag.charAt(0)+'r'] = () => {
-  el = nel(tag)
+nel_make_r = tag => w['nel'+tag.charAt(0)+'r'] = (id) => {
+  el = nel(tag, id)
   el.s.borderRadius = '15%'
   return el
 }
