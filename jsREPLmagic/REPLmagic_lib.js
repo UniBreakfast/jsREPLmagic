@@ -37,6 +37,8 @@ const evo = (...els) => {
       return el
     } }
     sgm('Id', 'id')
+    sgm('tx', 'innerText')
+    sgm('htm','innerHTML')
 
     // creates set/get method for a style property
     // if function given, value goes through it
@@ -71,9 +73,7 @@ const evo = (...els) => {
 
 evo(h, b)
 
-b.s.m(0)
-b.s.h('100vh')
-b.s.background = 'rgb(36, 36, 36)'
+b.s.m(0).s.h('100vh').s.b(24).s.c('B')
 
 nel = (tag, id) => {
   let el = evo(d.createElement(tag))
@@ -88,11 +88,9 @@ nel_make('span')
 nel_make('input')
 nel_make('button')
 
-nel_make_r = tag => w['nel'+tag.charAt(0)+'r'] = (id) => {
-  el = nel(tag, id)
-  el.s.borderRadius = '15%'
-  return el
-}
+nel_make_r = tag => eval(`w['nel${tag.charAt(0)}r'] = function nel${
+                         tag.charAt(0)}r(id) { let el = nel('${tag
+                         }', id); el.s.borderRadius = '15%'; return el}`)
 nel_make_r('div')
 nel_make_r('span')
 nel_make_r('input')
