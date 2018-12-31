@@ -24,33 +24,6 @@
   }
   log(rdbl([undefined],1))
 
-  // testIt logs if function(param) works as expected
-  testIt = (func, arg, result, arg_str, result_str) => {
-    if (typeof result == 'string' && result.indexOf('==')>=0) {
-      let rdbl_arg = rdbl(arg)
-      let res = func(arg)
-      log(`Test ${Tnum++}:  ${func.name}(${arg_str||rdbl_arg});  ${result_str||
-        result}   ` + (eval(result) ? ' YES!' : ' NO...'))
-    }
-    else log(`Test ${Tnum++}:  ${func.name}(${arg_str||rdbl(arg)}) = ${
-             result_str||rdbl(result)}   ` +
-      (func(arg)==result||JSON.stringify(func(arg))==JSON.stringify(result) ?
-       ' YES!' : ' NO...'))
-  }
-
-  // testEm logs if function(param1, param2, ...) works as expected
-  testEm = (func, args, result, args_str, result_str) => {
-    if (typeof result == 'string' && result.indexOf('==')>=0) {
-      let res = func.apply(this, args)
-      log(`Test ${Tnum++}:  ${func.name}(${args_str||rdbl(args, 1)});  ${result_str||
-          result}   ` + (eval(result) ? ' YES!' : ' NO...'))
-    }
-    else log(`Test ${Tnum++}:  ${func.name}(${args_str||rdbl(args, 1)}) = ${
-      result_str||rdbl(result)}   `+(func.apply(this,args)==result||
-      JSON.stringify(func.apply(this,args))==JSON.stringify(result) ?
-                                     ' YES!' : ' NO...'))
-  }
-
   tFuncResult = (func, args, result, arg_str, res_str) => {
     args = Array.isArray(args) ? args : [args]
     log(`Test ${Tnum++}:  ${func.name}(${arg_str||rdbl(args,1)}) = ${
