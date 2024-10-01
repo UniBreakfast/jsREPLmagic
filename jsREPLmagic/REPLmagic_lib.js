@@ -265,7 +265,7 @@ body_add_divs = (num, w, h) => {
   for (let i = 0; i < num; i++) {
     div = nel('div')
     div.s.display = 'inline-block'
-    div.whb(w, h, rcol())
+    div.whbc(w, h, rcol())
     body.a(div)
   }
 }
@@ -275,7 +275,7 @@ body_add_divs_grid = (w, h, hnum, vnum) => {
   hnum = hnum || 1; vnum = vnum || 1;
   if (hnum * vnum > 1000) return 'too many cells, try less than 1000'
   cont = nel('div')
-  cont.whb(w, h, 'black')
+  cont.whbc(w, h, 'black')
   cont.s.display = 'grid'
   let gridTemplate = ''
   let i
@@ -286,7 +286,7 @@ body_add_divs_grid = (w, h, hnum, vnum) => {
   body.a(cont)
   for (i = 0; i < hnum * vnum; i++) {
     div = nel('div')
-    div.whb('100%', '100%', rcol(5))
+    div.whbc('100%', '100%', rcol(5))
     cont.a(div)
   }
 }
