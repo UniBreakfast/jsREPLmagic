@@ -1,4 +1,5 @@
-# jsREPLmagic with Demo by Claude 3.5
+# jsREPLmagic 
+### with Demo by Claude 3.5
 My quest for a perfect idea speed-testing environment in a browser page + devtools + console trio
 
 This project demonstrates the usage of the REPLmagic library, a lightweight JavaScript library for quick DOM manipulation and prototyping.
